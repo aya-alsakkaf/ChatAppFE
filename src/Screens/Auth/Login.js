@@ -1,17 +1,22 @@
-import {
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import React, { useState } from "react";
+import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import React, { useContext, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import NAVIGATION from "../../navigation";
+import { useMutation } from "@tanstack/react-query";
+import { login } from "../../api/User";
+import UserContext from "../../Context/UserContext";
 
 const Login = () => {
   const [userInfo, setUserInfo] = useState({});
+  const { setIsAuthenticated } = useContext(UserContext);
   const navigation = useNavigation();
+  const { mutate } = useMutation({
+    mutationKey: ["login"],
+    mutationFn: () => login(userInfo),
+    onSuccess: () => {
+      setIsAuthenticated(true);
+    },
+  });
   return (
     <View
       style={{
@@ -55,7 +60,7 @@ const Login = () => {
           alignItems: "center",
           borderRadius: 5,
         }}
-        onPress={() => console.log(userInfo)}
+        onPress={() => mutate()}
       >
         <Text
           style={{
