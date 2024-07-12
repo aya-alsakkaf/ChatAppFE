@@ -1,5 +1,6 @@
 import axios from "axios";
 import { getToken } from "./storage";
+import { io } from "socket.io-client";
 
 const BASEURL = "http://localhost:8000";
 
@@ -15,6 +16,10 @@ instance.interceptors.request.use(async (config) => {
   }
 
   return config;
+});
+
+export const socket = io("http://localhost:3000", {
+  autoConnect: false,
 });
 
 export { instance, BASEURL };

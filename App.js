@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import UserContext from "./src/Context/UserContext";
 import { getToken } from "./src/api/storage";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { socket } from "./src/api";
 
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -14,6 +15,7 @@ export default function App() {
 
   useEffect(() => {
     checkToken();
+    socket.connect();
   }, []);
   return (
     <NavigationContainer>

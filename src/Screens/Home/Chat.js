@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MyChat from "../../Components/MyChat";
 import FromUserChat from "../../Components/FromUserChat";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -14,13 +14,15 @@ import { Feather } from "@expo/vector-icons";
 import { getChatRoombyID } from "../../api/ChatRooms";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { sendMessage } from "../../api/Message";
+import { socket } from "../../api";
 
 const Chat = ({ route }) => {
   const [message, setMessage] = useState({
     receiverID: route.params.toID,
     chatRoomID: route.params.id,
   });
-  const { data } = useQuery({
+
+  const { data, refetch } = useQuery({
     queryKey: ["getChatRoomByID", route.params.id],
     queryFn: () => getChatRoombyID(route.params.id),
   });
@@ -33,11 +35,21 @@ const Chat = ({ route }) => {
     }
   });
 
+  useEffect(() => {
+    socket.on("message", (data) => {
+      refetch();
+    });
+  }, []);
+
   const { mutate } = useMutation({
     mutationKey: ["sendMessage"],
     mutationFn: () => sendMessage(message),
     onSuccess: () => {
-      alert("Message Sent");
+      socket.emit("message", message);
+      setMessage({ ...message, message: "" });
+      socket.on("message", (data) => {
+        refetch();
+      });
     },
   });
   return (
@@ -64,6 +76,7 @@ const Chat = ({ route }) => {
       >
         <TextInput
           placeholder="Your Message"
+          value={message.message}
           style={{
             width: "95%",
           }}
