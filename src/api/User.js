@@ -21,4 +21,13 @@ const login = async (userInfo) => {
   }
 };
 
-export { register, login };
+const search = async (query) => {
+  try {
+    const { data } = await instance.post("/api/user/search", query);
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export { register, login, search };

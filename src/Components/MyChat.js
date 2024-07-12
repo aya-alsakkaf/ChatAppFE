@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 
-const MyChat = () => {
+const MyChat = ({ message }) => {
   return (
     <View
       style={{
@@ -19,7 +19,7 @@ const MyChat = () => {
           borderRadius: 10,
         }}
       >
-        <Text>I'm Fine, how are you?</Text>
+        <Text>{message}</Text>
       </View>
     </View>
   );

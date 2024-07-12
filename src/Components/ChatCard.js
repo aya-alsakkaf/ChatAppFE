@@ -3,12 +3,11 @@ import React from "react";
 import { useNavigation } from "@react-navigation/native";
 import NAVIGATION from "../navigation";
 
-const ChatCard = ({ image, chatname, message, time }) => {
+const ChatCard = ({ image, chatname, message, time, chatID, toID }) => {
   const navigation = useNavigation();
   return (
     <TouchableOpacity
       style={{
-        //   backgroundColor: "red",
         height: 100,
         display: "flex",
         flexDirection: "row",
@@ -18,7 +17,12 @@ const ChatCard = ({ image, chatname, message, time }) => {
         borderBottomColor: "#ccc",
         backgroundColor: "#f9f9f9",
       }}
-      onPress={() => navigation.navigate(NAVIGATION.HOME.CHAT)}
+      onPress={() =>
+        navigation.navigate(NAVIGATION.HOME.CHAT, {
+          id: chatID,
+          toID: toID,
+        })
+      }
     >
       <Image
         source={{
